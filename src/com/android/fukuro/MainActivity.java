@@ -44,7 +44,8 @@ public class MainActivity extends Activity implements View.OnClickListener{
 	public void onClick(View v) {
 		switch(v.getId()){//どのボタンが押されたか判定
 		case R.id.btnPost://btnPostが押された
-    		uploadCoordi("0000001","/data/data/com.android.fukuro/Item/item_all2.png","/data/data/com.android.fukuro/Item/item_all3.png");
+    		//uploadCoordi("0000001","/data/data/com.android.fukuro/Item/item_all2.png","/data/data/com.android.fukuro/Item/item_all3.png");
+			//postGood("10004.png");
 			break;
 		case R.id.btnC:
 			//インテントのインスタンス生成
@@ -84,5 +85,11 @@ public class MainActivity extends Activity implements View.OnClickListener{
 		//Task生成
 	    UploadAsyncTask up = new UploadAsyncTask(this);
 		up.execute(str[0],str[1],str[2]);
+	}
+	
+	public void postGood(String... str){
+		//Task生成
+	    GoodAsyncTask up = new GoodAsyncTask(this);
+		up.execute(str[0]);
 	}
 }

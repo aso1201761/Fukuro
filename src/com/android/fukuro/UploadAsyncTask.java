@@ -19,7 +19,6 @@ import org.apache.http.util.EntityUtils;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 
 public class UploadAsyncTask 
   extends AsyncTask<String, Integer, Integer> {

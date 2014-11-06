@@ -19,13 +19,12 @@ public class JsonActivity extends Activity implements DownloadListTaskCallback {
 		// TODO 自動生成されたメソッド・スタブ
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_json);
-		
-		DownloadImage();
     }
 
     @Override
     protected void onResume(){
         super.onResume();
+        DownloadImage();
     }
 
     @Override
@@ -36,7 +35,7 @@ public class JsonActivity extends Activity implements DownloadListTaskCallback {
 
 	public void DownloadImage(){
 		DownloadListTask task = new DownloadListTask(this, this);
-	     task.execute("");
+	    task.execute("");
 	}
 
 	@Override
