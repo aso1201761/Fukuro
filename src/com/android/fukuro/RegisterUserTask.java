@@ -12,15 +12,17 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 
-public class GoodAsyncTask 
+public class RegisterUserTask 
   extends AsyncTask<String, Integer, Integer> {
 
+  ProgressDialog dialog;
   Context context;
   
-  public GoodAsyncTask(Context context){
+  public RegisterUserTask(Context context){
     this.context = context;
   }
   
@@ -28,9 +30,9 @@ public class GoodAsyncTask
   protected Integer doInBackground(String... params) {
 	  try {
 		  HttpClient httpClient = new DefaultHttpClient();
-		  HttpPost request = new HttpPost("http://koyoshi.php.xdomain.jp/php/good.php");
+		  HttpPost request = new HttpPost("http://koyoshi.php.xdomain.jp/php/register.php");
 		  // パラメータを生成
-		  StringEntity body = new StringEntity(params[0]);
+		  StringEntity body = new StringEntity(params[0],"UTF-8");
 		  // パラメータを設定  
 		  request.setEntity(body);
 		  //Response
@@ -52,6 +54,7 @@ public class GoodAsyncTask
 		  System.out.println(result);
 		  httpClient.getConnectionManager().shutdown();
 	  } catch (ClientProtocolException e) {
+		  //ネットワークエラー
 		  e.printStackTrace();
 	  } catch (IOException e) {
 		  e.printStackTrace();
@@ -61,11 +64,16 @@ public class GoodAsyncTask
 
   @Override
   protected void onPostExecute(Integer result) {
-	  //事後処理
+    if(dialog != null){
+      dialog.dismiss();
+    }
   }
 
   @Override
   protected void onPreExecute() {
-	  //事前処理
+    dialog = new ProgressDialog(context);
+    dialog.setTitle("Please wait");
+    dialog.setMessage("Uploading...");
+    dialog.show();
   }  
 }

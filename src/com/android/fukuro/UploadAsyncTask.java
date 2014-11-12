@@ -81,7 +81,7 @@ public class UploadAsyncTask
       dialog.dismiss();
     }
   }
-
+  
   @Override
   protected void onPreExecute() {
     dialog = new ProgressDialog(context);

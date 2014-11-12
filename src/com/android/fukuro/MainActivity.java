@@ -4,14 +4,11 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-
-
-
-import com.android.fukuro.UploadAsyncTask;
 
 public class MainActivity extends Activity implements View.OnClickListener{
 	
@@ -36,22 +33,30 @@ public class MainActivity extends Activity implements View.OnClickListener{
 		//ボタンをIDで探してボタン変数をつくる
 		Button btnPost = (Button)findViewById(R.id.btnPost);
 		Button btnC = (Button)findViewById(R.id.btnC);
+		Button btnR = (Button)findViewById(R.id.btnR);
 		//ボタン変数にリスナーを登録する
 		btnPost.setOnClickListener(this);
 		btnC.setOnClickListener(this);
+		btnR.setOnClickListener(this);
 	}
 	
 	public void onClick(View v) {
 		switch(v.getId()){//どのボタンが押されたか判定
 		case R.id.btnPost://btnPostが押された
     		//uploadCoordi("0000001","/data/data/com.android.fukuro/Item/item_all2.png","/data/data/com.android.fukuro/Item/item_all3.png");
-			//postGood("10004.png");
+			postGood("10003.png");
 			break;
 		case R.id.btnC:
 			//インテントのインスタンス生成
 			Intent intent =new Intent(MainActivity.this, JsonActivity.class);
 			//次画面のアクティビティ起動
 			startActivity(intent);
+			break;
+		case R.id.btnR:
+			//インテントのインスタンス生成
+			Intent intentR =new Intent(MainActivity.this, RegisterActivity.class);
+			//次画面のアクティビティ起動
+			startActivity(intentR);
 			break;
 		}
 	}
@@ -87,9 +92,9 @@ public class MainActivity extends Activity implements View.OnClickListener{
 		up.execute(str[0],str[1],str[2]);
 	}
 	
-	public void postGood(String... str){
+	public void postGood(String filename){
 		//Task生成
-	    GoodAsyncTask up = new GoodAsyncTask(this);
-		up.execute(str[0]);
+	    GoodAsyncTask pg = new GoodAsyncTask(this);
+		pg.execute(filename);
 	}
 }
