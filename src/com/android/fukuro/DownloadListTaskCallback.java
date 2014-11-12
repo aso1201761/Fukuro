@@ -10,4 +10,9 @@ public interface DownloadListTaskCallback {
 	   * 画像のダウンロードが失敗した時に呼ばれるメソッド
 	   */
 	  void onFailedDownloadList();
+	  
+	  /**
+	   * エラーが発生した時に呼ばれるメソッド
+	   */
+	  void onFailedFound(String result);
 }

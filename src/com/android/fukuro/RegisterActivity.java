@@ -3,18 +3,23 @@ package com.android.fukuro;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteStatement;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
-public class RegisterActivity extends Activity implements View.OnClickListener{
+public class RegisterActivity extends Activity implements View.OnClickListener , RegisterUserTaskCallback {
 
 	AlertDialog alertDialog;
 	EditText input;
 	AlertDialog.Builder errorD;
-
+	private DBHelper dbHelper = new DBHelper(this);
+	public static SQLiteDatabase db;
+	String user;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO 自動生成されたメソッド・スタブ
@@ -35,7 +40,7 @@ public class RegisterActivity extends Activity implements View.OnClickListener{
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                    	String user = input.getText().toString();
+                    	user = input.getText().toString();
                     	if(user == null || user.length() == 0){
                     		 
                     	    // ダイアログの設定
@@ -94,7 +99,76 @@ public class RegisterActivity extends Activity implements View.OnClickListener{
 
 	public void regUser(String user_name) {
 		//Task生成
-	    RegisterUserTask ru = new RegisterUserTask(this);
+	    RegisterUserTask ru = new RegisterUserTask(this,this);
 		ru.execute(user_name);
+	}
+
+	@Override
+	public void onSuccessRegisterUser(String result) {
+		// TODO 自動生成されたメソッド・スタブ
+		//端末のDBにuser_idを登録
+		//読み書き可能なデータベースをオープン
+		// 読み取り専用の場合はgetReadableDatabase()を用いる
+		db = dbHelper.getWritableDatabase();
+		SQLiteStatement stmt = db.compileStatement("INSERT INTO User(user_id, user_name) VALUES(?, ?)");
+		stmt.bindString(1, result);
+		stmt.bindString(2, user);
+		stmt.executeInsert();
+		Toast.makeText(getApplicationContext(), "データを登録しました。",
+		Toast.LENGTH_SHORT).show();
+	}
+
+	@Override
+	public void onFailedRegisterUser() {
+		// TODO 自動生成されたメソッド・スタブ
+		// ダイアログの設定
+	    errorD.setTitle("エラーが発生しました");          //タイトル
+	    errorD.setMessage("ネットワークエラー");      //内容
+	 
+	    errorD.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+	        public void onClick(DialogInterface dialog, int which) {
+	            // TODO 自動生成されたメソッド・スタブ
+	        }
+	    });
+	 
+	    // ダイアログの作成と表示
+	    errorD.create();
+	    errorD.show();
+	}
+
+	@Override
+	public void onFailedFound(String result) {
+		// TODO 自動生成されたメソッド・スタブ
+		if(result == "unknown"){
+			// TODO 自動生成されたメソッド・スタブ
+			// ダイアログの設定
+			errorD.setTitle("エラーが発生しました");          //タイトル
+			errorD.setMessage("原因不明のエラー");      //内容
+		 
+			errorD.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+		        public void onClick(DialogInterface dialog, int which) {
+		            // TODO 自動生成されたメソッド・スタブ
+		        }
+		    });
+		 
+		    // ダイアログの作成と表示
+		    errorD.create();
+		    errorD.show();
+		}else if(result == "404"){
+			// TODO 自動生成されたメソッド・スタブ
+			// ダイアログの設定
+			errorD.setTitle("エラーが発生しました");          //タイトル
+			errorD.setMessage("ファイルが見つかりませんでした");      //内容
+		 
+			errorD.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+		        public void onClick(DialogInterface dialog, int which) {
+		            // TODO 自動生成されたメソッド・スタブ
+		        }
+		    });
+		 
+		    // ダイアログの作成と表示
+		    errorD.create();
+		    errorD.show();
+		}
 	}
 }

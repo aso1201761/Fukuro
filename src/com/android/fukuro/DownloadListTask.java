@@ -66,7 +66,10 @@ public class DownloadListTask
       if (result == null) {
           // エラーをコールバックで返す
           callback.onFailedDownloadList();
-        } else {
+        } else if(result == "unknown" || result == "404"){
+          //エラーダイアログ表示
+          callback.onFailedFound(result);
+        }else{
           // ダウンロードしたリストをコールバックでを返す
           callback.onSuccessDownloadList(result);
         }

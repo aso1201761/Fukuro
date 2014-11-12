@@ -17,17 +17,19 @@ import android.content.Context;
 import android.os.AsyncTask;
 
 public class RegisterUserTask 
-  extends AsyncTask<String, Integer, Integer> {
-
+  extends AsyncTask<String, Integer, String> {
+  private RegisterUserTaskCallback callback;
   ProgressDialog dialog;
   Context context;
+  String result = null;
   
-  public RegisterUserTask(Context context){
+  public RegisterUserTask(Context context,RegisterUserTaskCallback callback){
     this.context = context;
+    this.callback = callback;
   }
   
   @Override
-  protected Integer doInBackground(String... params) {
+  protected String doInBackground(String... params) {
 	  try {
 		  HttpClient httpClient = new DefaultHttpClient();
 		  HttpPost request = new HttpPost("http://koyoshi.php.xdomain.jp/php/register.php");
@@ -36,7 +38,7 @@ public class RegisterUserTask
 		  // パラメータを設定  
 		  request.setEntity(body);
 		  //Response
-		  String result = httpClient.execute(request, new ResponseHandler<String>(){
+		  result = httpClient.execute(request, new ResponseHandler<String>(){
 			  public String handleResponse(HttpResponse response) throws IOException{
 				  switch(response.getStatusLine().getStatusCode()){
 				  case HttpStatus.SC_OK:
@@ -54,19 +56,28 @@ public class RegisterUserTask
 		  System.out.println(result);
 		  httpClient.getConnectionManager().shutdown();
 	  } catch (ClientProtocolException e) {
-		  //ネットワークエラー
 		  e.printStackTrace();
 	  } catch (IOException e) {
 		  e.printStackTrace();
 	  }
-	  return 0;
+	  return result;
   }
 
   @Override
-  protected void onPostExecute(Integer result) {
-    if(dialog != null){
-      dialog.dismiss();
-    }
+  protected void onPostExecute(String result) {
+	  if(dialog != null){
+	      dialog.dismiss();
+	      if (result == null) {
+	          // エラーをコールバックで返す
+	          callback.onFailedRegisterUser();
+	        } else if(result == "unknown" || result == "404"){
+	          //エラーダイアログ表示
+	          callback.onFailedFound(result);
+	        }else{
+	          // ダウンロードしたリストをコールバックでを返す
+	          callback.onSuccessRegisterUser(result);
+	        }
+	    }
   }
 
   @Override
