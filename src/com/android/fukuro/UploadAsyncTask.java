@@ -15,26 +15,27 @@ import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
-
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 
 public class UploadAsyncTask 
-  extends AsyncTask<String, Integer, Integer> {
+  extends AsyncTask<String, Integer, String> {
 
-  ProgressDialog dialog;
-  Context context;
+	private UploadAsyncTaskCallback callback;
+	ProgressDialog dialog;
+	Context context;
+	String result;
   
-  public UploadAsyncTask(Context context){
+  public UploadAsyncTask(Context context,UploadAsyncTaskCallback callback){
     this.context = context;
+    this.callback = callback;
   }
-  
-  @Override
-  protected Integer doInBackground(String... params) {
+
+@Override
+  protected String doInBackground(String... params) {
     try {
       String fileName = params[1];
-      String fileName2 = params[2];
       
       HttpClient httpClient = new DefaultHttpClient();
       HttpPost request = new HttpPost("http://koyoshi.php.xdomain.jp/php/upload.php");
@@ -42,15 +43,12 @@ public class UploadAsyncTask
         new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
       
       File file = new File(fileName);
-      File file2 = new File(fileName2);
       FileBody fileBody = new FileBody(file, file.getAbsolutePath());
-      FileBody fileBody2 = new FileBody(file2, file.getAbsolutePath());
       multipartEntity.addPart("user_id", new StringBody(params[0]));
       multipartEntity.addPart("f1", fileBody);
-      multipartEntity.addPart("f2", fileBody2);
       request.setEntity(multipartEntity);
       //Response
-      String result = httpClient.execute(request, new ResponseHandler<String>(){
+      result = httpClient.execute(request, new ResponseHandler<String>(){
           public String handleResponse(HttpResponse response) throws IOException{
               switch(response.getStatusLine().getStatusCode()){
               case HttpStatus.SC_OK:
@@ -72,13 +70,19 @@ public class UploadAsyncTask
     } catch (IOException e) {
       e.printStackTrace();
     }
-    return 0;
+    return result;
   }
 
   @Override
-  protected void onPostExecute(Integer result) {
+  protected void onPostExecute(String result) {
     if(dialog != null){
       dialog.dismiss();
+    }
+    if(result == null)
+    {
+    	callback.onFailedUpload();
+    }else{
+    	callback.onSuccessUpload(result);
     }
   }
   

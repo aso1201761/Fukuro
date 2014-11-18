@@ -35,4 +35,13 @@
         android:layout_marginTop="36dp"
         android:text="登録画面" />
 
+    <Button
+        android:id="@+id/btnM"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/btnC"
+        android:layout_below="@+id/btnR"
+        android:layout_marginTop="35dp"
+        android:text="投稿する" />
+
 </RelativeLayout>

@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -34,10 +33,12 @@ public class MainActivity extends Activity implements View.OnClickListener{
 		Button btnPost = (Button)findViewById(R.id.btnPost);
 		Button btnC = (Button)findViewById(R.id.btnC);
 		Button btnR = (Button)findViewById(R.id.btnR);
+		Button btnM = (Button)findViewById(R.id.btnM);
 		//ボタン変数にリスナーを登録する
 		btnPost.setOnClickListener(this);
 		btnC.setOnClickListener(this);
 		btnR.setOnClickListener(this);
+		btnM.setOnClickListener(this);
 	}
 	
 	public void onClick(View v) {
@@ -57,6 +58,10 @@ public class MainActivity extends Activity implements View.OnClickListener{
 			Intent intentR =new Intent(MainActivity.this, RegisterActivity.class);
 			//次画面のアクティビティ起動
 			startActivity(intentR);
+			break;
+		case R.id.btnM:
+			Intent vIntent = new Intent(this, Uplist.class);
+			startActivity(vIntent);
 			break;
 		}
 	}
@@ -87,9 +92,9 @@ public class MainActivity extends Activity implements View.OnClickListener{
 	}
 	
 	public void uploadCoordi(String... str){
-		//Task生成
-	    UploadAsyncTask up = new UploadAsyncTask(this);
-		up.execute(str[0],str[1],str[2]);
+//		//Task生成
+//	    UploadAsyncTask up = new UploadAsyncTask(this);
+//		up.execute(str[0],str[1],str[2]);
 	}
 	
 	public void postGood(String filename){
