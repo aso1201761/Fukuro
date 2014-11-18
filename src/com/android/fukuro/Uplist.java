@@ -48,7 +48,7 @@ public class Uplist extends Activity implements OnItemClickListener, UploadAsync
 		GridView gridview = (GridView) findViewById(R.id.gridview);
 		// BaseAdapter を継承したGridAdapterのインスタンスを生成
 		// 子要素のレイアウトファイル grid_items.xml を main.xml に inflate するためにGridAdapterに引数として渡す
-		GridAdapter adapter = new GridAdapter(this.getApplicationContext(), R.layout.grid_item, imgList);
+		GridAdapter adapter = new GridAdapter(this.getApplicationContext(), R.layout.grid_photo_item, imgList);
 		// gridViewにadapterをセット
 		gridview.setAdapter(adapter);
 		// gridviewにクリックリスナーセット
