@@ -54,17 +54,6 @@
         android:clickable="false"
         android:scaleType="centerCrop" />
 
-    <ImageView
-        android:id="@+id/later1"
-        android:layout_width="120dp"
-        android:layout_height="160dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_marginBottom="22dp"
-        android:background="#FFFFFF"
-        android:clickable="false"
-        android:scaleType="centerCrop" />
-
     <ImageButton
         android:id="@+id/btnRank"
         android:layout_width="40dp"
@@ -80,5 +69,15 @@
         android:layout_alignParentRight="true"
         android:layout_below="@+id/rank3"
         android:background="@drawable/ic_launcher" />
+
+    <ImageView
+        android:id="@+id/later1"
+        android:layout_width="120dp"
+        android:layout_height="160dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:background="#FFFFFF"
+        android:clickable="false"
+        android:scaleType="centerCrop" />
 
 </RelativeLayout>
