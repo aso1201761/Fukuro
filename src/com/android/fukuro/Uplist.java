@@ -159,7 +159,7 @@ public class Uplist extends Activity implements OnItemClickListener, UploadAsync
 			imgList.add(cnt,destPath);
 			cr.moveToNext();
 		}
-
+		cr.close();
 	}
 
 	@Override

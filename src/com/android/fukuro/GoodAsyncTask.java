@@ -16,16 +16,18 @@ import android.content.Context;
 import android.os.AsyncTask;
 
 public class GoodAsyncTask 
-  extends AsyncTask<String, Integer, Integer> {
-
+  extends AsyncTask<String, Integer, String> {
+  private GoodAsyncTaskCallback callback;
   Context context;
+  String result = null;
   
-  public GoodAsyncTask(Context context){
+  public GoodAsyncTask(Context context,GoodAsyncTaskCallback callback){
     this.context = context;
+    this.callback = callback;
   }
   
   @Override
-  protected Integer doInBackground(String... params) {
+  protected String doInBackground(String... params) {
 	  try {
 		  HttpClient httpClient = new DefaultHttpClient();
 		  HttpPost request = new HttpPost("http://koyoshi.php.xdomain.jp/php/good.php");
@@ -34,7 +36,7 @@ public class GoodAsyncTask
 		  // パラメータを設定  
 		  request.setEntity(body);
 		  //Response
-		  String result = httpClient.execute(request, new ResponseHandler<String>(){
+		  result = httpClient.execute(request, new ResponseHandler<String>(){
 			  public String handleResponse(HttpResponse response) throws IOException{
 				  switch(response.getStatusLine().getStatusCode()){
 				  case HttpStatus.SC_OK:
@@ -56,12 +58,17 @@ public class GoodAsyncTask
 	  } catch (IOException e) {
 		  e.printStackTrace();
 	  }
-	  return 0;
+	  return result;
   }
 
   @Override
-  protected void onPostExecute(Integer result) {
+  protected void onPostExecute(String result) {
 	  //事後処理
+	  if(result == null ||result == "404" || result == "unknown"){
+		  callback.onFailedGood();
+	  }else{
+		  callback.onSuccessGood(result);
+	  }
   }
 
   @Override

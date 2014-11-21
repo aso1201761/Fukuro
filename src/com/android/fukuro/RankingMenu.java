@@ -71,6 +71,8 @@ public class RankingMenu extends Activity implements View.OnClickListener,Downlo
 			startActivity(intentRank);
 			break;
 		case R.id.btnLater://btnLaterが押された
+			Intent intentLater = new Intent(this, Later50Activity.class);
+			startActivity(intentLater);
 			break;
 		}
 	}

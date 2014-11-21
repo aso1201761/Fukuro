@@ -115,6 +115,7 @@ public class RegisterActivity extends Activity implements View.OnClickListener ,
 		stmt.bindString(1, result);
 		stmt.bindString(2, user);
 		stmt.executeInsert();
+		stmt.close();
 		Toast.makeText(getApplicationContext(), "データを登録しました。",
 		Toast.LENGTH_SHORT).show();
 	}

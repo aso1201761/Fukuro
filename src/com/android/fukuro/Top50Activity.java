@@ -7,7 +7,9 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteStatement;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -20,13 +22,14 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-public class Top50Activity extends Activity implements OnItemClickListener,DownloadImageTaskCallback{
+public class Top50Activity extends Activity implements OnItemClickListener,DownloadImageTaskCallback,GoodAsyncTaskCallback{
 	// 要素をArrayListで設定
 	private List<Bitmap> imgList;
 	private List<String> fnList;
 	private DBHelper dbHelper = new DBHelper(this);
 	public static SQLiteDatabase db;
 	AlertDialog.Builder errorD;
+	private int goodPosition;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -46,9 +49,16 @@ public class Top50Activity extends Activity implements OnItemClickListener,Downl
 	    dit.execute("top50");
 	}
 	
+	public void postGood(String filename){
+		//Task生成
+	    GoodAsyncTask pg = new GoodAsyncTask(this,this);
+		pg.execute(filename);
+	}
+	
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,long id) {
 		System.out.println(fnList.get(position));
+		goodPosition = position;
 		AlertDialog.Builder alertGood = new AlertDialog.Builder(this);
         // アラートダイアログのContentViewを設定します
 		//Bitmap image
@@ -62,6 +72,21 @@ public class Top50Activity extends Activity implements OnItemClickListener,Downl
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                    	Cursor cr = db.rawQuery("SELECT COUNT(*) FROM Good WHERE good_name = \""+fnList.get(goodPosition)+"\"", null);
+                		cr.moveToFirst();
+
+                		System.out.println(cr.getInt(0));
+                		int exist = cr.getInt(0);
+                		cr.close();
+                		//いいねしたかどうか判定
+                		if(exist == 0){//いいねしていない
+                			postGood(fnList.get(goodPosition));
+                		}
+                		else//いいねしている
+                		{
+                			Toast.makeText(getApplicationContext(), "既にいいねしています",
+                			Toast.LENGTH_SHORT).show();
+                		}
                     }
                 });
         // アラートダイアログのCancelボタンがクリックされた時に呼び出されるコールバックリスナーを登録します
@@ -159,5 +184,25 @@ public class Top50Activity extends Activity implements OnItemClickListener,Downl
 	public void onFailedDownloadImage() {
 		// TODO 自動生成されたメソッド・スタブ
 		
+	}
+
+	@Override
+	public void onSuccessGood(String filename) {
+		// TODO 自動生成されたメソッド・スタブ
+    	db = dbHelper.getWritableDatabase();
+		SQLiteStatement stmt = db.compileStatement("INSERT INTO Good(good_name) VALUES(?)");
+		stmt.bindString(1,filename);
+		stmt.executeInsert();
+		stmt.close();
+		
+		Toast.makeText(getApplicationContext(), "いいねしました！",
+		Toast.LENGTH_SHORT).show();
+	}
+
+	@Override
+	public void onFailedGood() {
+		// TODO 自動生成されたメソッド・スタブ
+		Toast.makeText(getApplicationContext(), "いいねできませんでした…",
+		Toast.LENGTH_SHORT).show();
 	}
 }
