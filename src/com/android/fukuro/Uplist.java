@@ -13,6 +13,7 @@ import android.database.sqlite.SQLiteStatement;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Environment;
 import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -151,6 +152,7 @@ public class Uplist extends Activity implements OnItemClickListener, UploadAsync
 
 		for(int cnt = 0; cnt < cr.getCount(); cnt++){
 			destPath = "/data/data/"+this.getPackageName()+"/Item/" + cr.getString(1);
+//			destPath = Environment.getExternalStorageDirectory()+"/Item/" + cr.getString(1);
 			System.out.println(cr.getString(1));
 			System.out.println(destPath);
 			// List<String> imgList にはファイルのパスを入れる
@@ -169,7 +171,6 @@ public class Uplist extends Activity implements OnItemClickListener, UploadAsync
 
 	class ViewHolder {
 		ImageView imageView;
-		ImageView nStar;
 	}
 
 	class GridAdapter extends BaseAdapter {

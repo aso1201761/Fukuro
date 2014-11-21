@@ -1,6 +1,11 @@
 package com.android.fukuro;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.ClientProtocolException;
@@ -9,21 +14,30 @@ import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.util.Log;
 
-public class DownloadListTask 
+public class DownloadImageTask 
   extends AsyncTask<String, Integer, String> {
-  private DownloadListTaskCallback callback;
+  private DownloadImageTaskCallback callback;
   ProgressDialog dialog;
   Context context;
   String result = null;
+  Bitmap oBmp = null;
+  List<Bitmap> bmList = new ArrayList<Bitmap>();
+  List<String> fnList = new ArrayList<String>();
   
-  public DownloadListTask(Context context,DownloadListTaskCallback callback){
-    this.context = context;
-    this.callback = callback;
+  public DownloadImageTask(Context context,DownloadImageTaskCallback callback){
+	  this.context = context;
+	  this.callback = callback;
   }
   
   @Override
@@ -51,29 +65,55 @@ public class DownloadListTask
 	      });
 	      System.out.println(result);
 	      httpClient.getConnectionManager().shutdown();
-	    } catch (ClientProtocolException e) {
+	      
+	      if (result == null) {
+	    	  
+	      }
+	      else{
+	    	  JSONObject rootObject = new JSONObject(result);
+	  	      JSONArray itemArray = rootObject.getJSONArray("item");
+	  	      for (int i = 0; i < itemArray.length(); i++) {
+	  	    	  JSONObject jsonObject = itemArray.getJSONObject(i);
+	  	    	  // アイテムを追加します
+	  	    	  fnList.add(i,jsonObject.getString("ranking_item"));
+	  	    	  Log.d("json",jsonObject.getString("ranking_item"));
+	  	      }
+	  	      
+	  	      URL url;
+	  	      InputStream istream;
+	  	      for(int i = 0; i < fnList.size(); i++){
+	  	    	  //画像のURLを直うち
+	  	    	  url = new URL("http://koyoshi.php.xdomain.jp/item/"+ fnList.get(i));
+	  	    	  //インプットストリームで画像を読み込む
+	  	    	  istream = url.openStream();
+	  	    	  //読み込んだファイルをビットマップに変換
+	  	    	  oBmp = BitmapFactory.decodeStream(istream);
+	  	    	  //インプットストリームを閉じる
+	  	    	  istream.close();
+	  	    	  bmList.add(i,oBmp);
+	  	      }
+	      }
+	  } catch (ClientProtocolException e) {
 	      e.printStackTrace();
-	    } catch (IOException e) {
+	  } catch (IOException e) {
 	      e.printStackTrace();
-	    }
+	  } catch (JSONException e) {
+		  e.printStackTrace();
+	  }
 	return result;
   }
 
-  @Override
   protected void onPostExecute(String result) {
 //    if(dialog != null){
 //      dialog.dismiss();
 //    }
-	  if (result == null) {
+    if (result == null) {
         // エラーをコールバックで返す
-        callback.onFailedDownloadList();
-      } else if(result == "unknown" || result == "404"){
-        //エラーダイアログ表示
-        callback.onFailedFound(result);
+        callback.onFailedDownloadImage();
       }else{
-        // ダウンロードしたリストをコールバックでを返す
-        callback.onSuccessDownloadList(result);
-      }
+        // ダウンロードした画像をコールバックで返す
+        callback.onSuccessDownloadImage(bmList,fnList);
+    }
   }
 
   @Override

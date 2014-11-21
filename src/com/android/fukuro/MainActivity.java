@@ -34,11 +34,13 @@ public class MainActivity extends Activity implements View.OnClickListener{
 		Button btnC = (Button)findViewById(R.id.btnC);
 		Button btnR = (Button)findViewById(R.id.btnR);
 		Button btnM = (Button)findViewById(R.id.btnM);
+		Button btnRanking = (Button)findViewById(R.id.btnRanking);
 		//ボタン変数にリスナーを登録する
 		btnPost.setOnClickListener(this);
 		btnC.setOnClickListener(this);
 		btnR.setOnClickListener(this);
 		btnM.setOnClickListener(this);
+		btnRanking.setOnClickListener(this);
 	}
 	
 	public void onClick(View v) {
@@ -62,6 +64,10 @@ public class MainActivity extends Activity implements View.OnClickListener{
 		case R.id.btnM:
 			Intent vIntent = new Intent(this, Uplist.class);
 			startActivity(vIntent);
+			break;
+		case R.id.btnRanking:
+			Intent intentRanking = new Intent(this, RankingMenu.class);
+			startActivity(intentRanking);
 			break;
 		}
 	}

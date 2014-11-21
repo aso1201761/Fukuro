@@ -9,39 +9,51 @@
     tools:context="com.android.fukuro.MainActivity" >
 
     <Button
-        android:id="@+id/btnPost"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="60dp"
-        android:text="送信" />
-
-    <Button
         android:id="@+id/btnC"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/btnPost"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="38dp"
+        android:layout_alignBaseline="@+id/btnPost"
+        android:layout_alignBottom="@+id/btnPost"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="45dp"
         android:text="Json取得" />
 
     <Button
         android:id="@+id/btnR"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/btnC"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="36dp"
+        android:layout_below="@+id/btnPost"
+        android:layout_marginRight="29dp"
+        android:layout_marginTop="42dp"
+        android:layout_toLeftOf="@+id/btnC"
         android:text="登録画面" />
+
+    <Button
+        android:id="@+id/btnPost"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignRight="@+id/btnR"
+        android:layout_marginRight="24dp"
+        android:layout_marginTop="56dp"
+        android:text="送信" />
 
     <Button
         android:id="@+id/btnM"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/btnR"
+        android:layout_alignBottom="@+id/btnR"
         android:layout_alignRight="@+id/btnC"
-        android:layout_below="@+id/btnR"
-        android:layout_marginTop="35dp"
         android:text="投稿する" />
+
+    <Button
+        android:id="@+id/btnRanking"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/btnR"
+        android:layout_below="@+id/btnR"
+        android:layout_marginTop="38dp"
+        android:text="ランキング" />
 
 </RelativeLayout>

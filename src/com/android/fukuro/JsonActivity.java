@@ -40,7 +40,7 @@ public class JsonActivity extends Activity implements DownloadListTaskCallback {
 
 	public void DownloadImage(){
 		DownloadListTask task = new DownloadListTask(this, this);
-	    task.execute("");
+	    task.execute("rank10");
 	}
 
 	@Override

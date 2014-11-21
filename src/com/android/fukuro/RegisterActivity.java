@@ -74,6 +74,7 @@ public class RegisterActivity extends Activity implements View.OnClickListener ,
         // アラートダイアログのキャンセルが可能かどうかを設定します
         alertDialogBuilder.setCancelable(true);
         alertDialog = alertDialogBuilder.create();
+        
 	}
 
 	@Override
