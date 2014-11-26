@@ -30,14 +30,14 @@ public class Top50Activity extends Activity implements OnItemClickListener,Downl
 	public static SQLiteDatabase db;
 	AlertDialog.Builder errorD;
 	private int goodPosition;
+	Bitmap bmp;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.top50);
-		
 		db = dbHelper.getReadableDatabase();
-
+	    
 		// 画像をダウンロードする
 		DownloadImage();
 		
@@ -106,6 +106,8 @@ public class Top50Activity extends Activity implements OnItemClickListener,Downl
 	protected void onDestroy() {
 		// TODO 自動生成されたメソッド・スタブ
 		super.onDestroy();
+//		imgList.clear();
+		imgList = null;
 		dbHelper.close();
 	}
 
@@ -140,10 +142,9 @@ public class Top50Activity extends Activity implements OnItemClickListener,Downl
 			}
 
 			//プラスボタン以外の画像読み出し
-			Bitmap bmp = imgList.get(position);
+			bmp = imgList.get(position);
 			bmp = Bitmap.createScaledBitmap(bmp, 120, 160, true);
 			holder.imageView.setImageBitmap(bmp);
-			
 			return convertView;
 		}
 
@@ -169,6 +170,7 @@ public class Top50Activity extends Activity implements OnItemClickListener,Downl
 		// TODO 自動生成されたメソッド・スタブ
 		imgList = bitmaplist;
 		fnList = filenames;
+		
 		// GridViewのインスタンスを生成
 		GridView gridview = (GridView) findViewById(R.id.gridview);
 		// BaseAdapter を継承したGridAdapterのインスタンスを生成
@@ -183,7 +185,6 @@ public class Top50Activity extends Activity implements OnItemClickListener,Downl
 	@Override
 	public void onFailedDownloadImage() {
 		// TODO 自動生成されたメソッド・スタブ
-		
 	}
 
 	@Override

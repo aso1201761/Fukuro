@@ -104,9 +104,9 @@ public class DownloadImageTask
   }
 
   protected void onPostExecute(String result) {
-//    if(dialog != null){
-//      dialog.dismiss();
-//    }
+    if(dialog != null){
+      dialog.dismiss();
+    }
     if (result == null) {
         // エラーをコールバックで返す
         callback.onFailedDownloadImage();
@@ -118,9 +118,10 @@ public class DownloadImageTask
 
   @Override
   protected void onPreExecute() {
-//    dialog = new ProgressDialog(context);
-//    dialog.setTitle("Please wait");
-//    dialog.setMessage("Downloading...");
-//    dialog.show();
+    dialog = new ProgressDialog(context);
+    dialog.setTitle("Please wait");
+    dialog.setMessage("Downloading...");
+    dialog.setCanceledOnTouchOutside(false);
+    dialog.show();
   }  
 }
